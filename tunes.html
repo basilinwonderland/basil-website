@@ -1,0 +1,332 @@
+﻿<!DOCTYPE html>
+<style>
+@import url('css');
+
+body {
+    background: white;
+}
+
+#background {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    margin: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    filter: blur(10px);
+    z-index: -1;
+}
+
+/* container for music player */
+.container {
+    position: absolute;
+    height: 300pt;
+    width: 250pt;
+    margin: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000000;
+    border-radius: 10px;
+
+}
+
+/* container for play, pause, previous track, next track, and progress bar  */
+.box {
+    position: absolute;
+    height: 50%;
+    width: 103%;
+    background: #FEF0F7;
+    z-index: 4;
+    bottom: -17%;
+}
+
+/* album cover */
+#thumbnail {
+    position: absolute;
+    width: 103%;
+    top: -7%;
+    transition: 1s;
+    z-index: 3;
+}
+
+/* track artist */
+.song-artist {
+    position: absolute;
+    z-index: 4;
+    color: black;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    bottom: 21%;
+    left: 28%;
+}
+
+/* track title */
+.song-title {
+    position: absolute;
+    z-index: 4;
+    color: #FEA5D4;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 17px;
+    bottom: 16%;
+    left: 28%;
+}
+
+/* style for play and pause images */
+#play-pause {
+    position: absolute;
+    height: auto;
+    width: 50px;
+    cursor: pointer;
+    bottom: 15%;
+    z-index: 4;
+    font-size: 50px;
+    left: 9%;
+}
+
+/* style for next and previous song images */
+#next-song, #previous-song {
+    position: absolute;
+    height: 30px;
+    width: 30px;
+    cursor: pointer;
+    bottom: 13.5%;
+    font-size: 40px;
+    z-index: 4;
+}
+
+/* unique style for next song image */
+#next-song {
+    right: 10%;
+}
+
+/* unique style for previous song image */
+#previous-song {
+    right: 10.3%;
+    bottom: 21.5%;
+}
+
+/* style for current time of the track */
+.currentTime {
+    position: absolute;
+    height: 50px;
+    width: 50px;
+    cursor: pointer;
+    bottom: -7.5%;
+    left: 17%;
+    z-index: 4;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    color: black;
+    align-items: center;
+}
+
+/* style for the total length of the track */
+.durationTime {
+    position: absolute;
+    height: 50px;
+    width: 50px;
+    cursor: pointer;
+    bottom: -1%;
+    right: 11%;
+    z-index: 4;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    align-items: center;
+    color: #FEA5D4;
+}
+
+/* style for the progress bar */
+#progress-bar {
+    -webkit-appearance: none;
+    appearance: none;
+    position: absolute;
+    z-index: 4;
+    height: 5px;
+    background: #000000;
+    width: 160pt;
+    bottom: 5%;
+    border-radius: 30px;
+    left: 17%;
+}
+
+/* style for the progress bar's slider thumb */
+#progress-bar::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    margin-top: -3px;
+    margin-left: 0px;
+    height: 10px;
+    width: 7px;
+    border: 0;
+    background: #FEA5D4;
+    border-radius: 30px;
+    cursor: pointer;
+}
+
+/* style for the progress bar's runnable track */
+#progress-bar::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    max-height: 5px;
+    border-radius: 30px;
+}
+
+/* style to remove blue shade of the progress bar when clicked on/selected */
+#progress-bar:focus {
+    outline: none;
+}
+
+</style>
+
+
+<html>
+<head>
+    <title>Music Player</title>
+    <link rel="stylesheet" href="player.css">
+</head>
+<body>
+   
+    <audio src="z5loyw.mp3" id="song"></audio>
+
+    <div class="container">  
+        <div class="box"></div>      
+        <img src="hdEUnTC.jpg" id="thumbnail">
+        
+        <img src="f4575fffd1a8f405ab89bf7ed7dae3dd/c6558c51d618e17f-f4/s75x75_c1/tumblr_f4575fffd1a8f405ab89bf7ed7dae3dd_aaa0fcfb_75.gif" onclick="playPause()" id="play-pause">
+        
+        <img src="83ed03f9b5c6ef05205c6c683242b390/74e3a4f2f60c0e4d-68/s75x75_c1/tumblr_83ed03f9b5c6ef05205c6c683242b390_a2bea2d7_75.gif" onclick="nextSong()" id="next-song">
+        <img src="a4684f5a22ac0fc2eab4dc9caf7e72be/74e3a4f2f60c0e4d-0b/s75x75_c1/tumblr_a4684f5a22ac0fc2eab4dc9caf7e72be_7217a1da_75.gif" onclick="previousSong()" id="previous-song">
+
+        <div class="song-artist">Yoru Ni Kakeru</div>
+        <div class="song-title">YOASOBI</div>
+
+        <!-- Input element for progress bar - min=0 starting value of every song - max length will change per song so leave empty -->
+        
+        <input type="range" id="progress-bar" min="0" max="" value="0" onchange="changeProgressBar()">
+
+        <div class="currentTime"></div>
+        <div class="durationTime"></div>
+    </div>
+
+    <script src="player.js"></script>
+</body>
+</html>
+
+
+<script>
+
+const background = document.querySelector('#background'); // background derived from album cover below
+const thumbnail = document.querySelector('#thumbnail'); // album cover 
+const song = document.querySelector('#song'); // audio object
+
+const songArtist = document.querySelector('.song-artist'); // element where track artist appears
+const songTitle = document.querySelector('.song-title'); // element where track title appears
+const progressBar = document.querySelector('#progress-bar'); // element where progress bar appears
+let pPause = document.querySelector('#play-pause'); // element where play and pause image appears
+
+songIndex = 0;
+songs = ['https://files.catbox.moe/z5loyw.mp3', 'https://files.catbox.moe/6yb4mc.mp3']; // object storing paths for audio objects
+thumbnails = ['https://i.imgur.com/hdEUnTC.jpg', 'https://i.imgur.com/hdEUnTC.jpg']; // object storing paths for album covers and backgrounds
+songArtists = ['夜に駆ける', 'YOASOBI']; // object storing track artists
+songTitles = ["Hi High", "LOONA"]; // object storing track titles
+
+// function where pp (play-pause) element changes based on playing boolean value - if play button clicked, change pp.src to pause button and call song.play() and vice versa.
+let playing = true;
+function playPause() {
+    if (playing) {
+        const song = document.querySelector('#song'),
+        thumbnail = document.querySelector('#thumbnail');
+
+        pPause.src = "https://64.media.tumblr.com/f4575fffd1a8f405ab89bf7ed7dae3dd/c6558c51d618e17f-f4/s75x75_c1/aaa0fcfb4ecf3e2c44fa0bf33089bf837db9e4ce.gifv"
+        thumbnail.style.transform = "scale(1.15)";
+        
+        song.play();
+        playing = false;
+    } else {
+        pPause.src = "https://64.media.tumblr.com/f4575fffd1a8f405ab89bf7ed7dae3dd/c6558c51d618e17f-f4/s75x75_c1/aaa0fcfb4ecf3e2c44fa0bf33089bf837db9e4ce.gifv"
+        thumbnail.style.transform = "scale(1)"
+        
+        song.pause();
+        playing = true;
+    }
+}
+
+// automatically play the next song at the end of the audio object's duration
+song.addEventListener('ended', function(){
+    nextSong();
+});
+
+// function where songIndex is incremented, song/thumbnail image/background image/song artist/song title changes to next index value, and playPause() runs to play next track 
+function nextSong() {
+    songIndex++;
+    if (songIndex > 1) {
+        songIndex = 0;
+    };
+    song.src = songs[songIndex];
+    thumbnail.src = thumbnails[songIndex];
+    background.src = thumbnails[songIndex];
+
+    songArtist.innerHTML = songArtists[songIndex];
+    songTitle.innerHTML = songTitles[songIndex];
+
+    playing = true;
+    playPause();
+}
+
+// function where songIndex is decremented, song/thumbnail image/background image/song artist/song title changes to previous index value, and playPause() runs to play previous track 
+function previousSong() {
+    songIndex--;
+    if (songIndex < 0) {
+        songIndex = 1;
+    };
+    song.src = songs[songIndex];
+    thumbnail.src = thumbnails[songIndex];
+    background.src = thumbnails[songIndex];
+
+    songArtist.innerHTML = songArtists[songIndex];
+    songTitle.innerHTML = songTitles[songIndex];
+
+    playing = true;
+    playPause();
+}
+
+// update progressBar.max to song object's duration, same for progressBar.value, update currentTime/duration DOM
+function updateProgressValue() {
+    progressBar.max = song.duration;
+    progressBar.value = song.currentTime;
+    document.querySelector('.currentTime').innerHTML = (formatTime(Math.floor(song.currentTime)));
+    if (document.querySelector('.durationTime').innerHTML === "NaN:NaN") {
+        document.querySelector('.durationTime').innerHTML = "0:00";
+    } else {
+        document.querySelector('.durationTime').innerHTML = (formatTime(Math.floor(song.duration)));
+    }
+};
+
+// convert song.currentTime and song.duration into MM:SS format
+function formatTime(seconds) {
+    let min = Math.floor((seconds / 60));
+    let sec = Math.floor(seconds - (min * 60));
+    if (sec < 10){ 
+        sec  = `0${sec}`;
+    };
+    return `${min}:${sec}`;
+};
+
+// run updateProgressValue function every 1/2 second to show change in progressBar and song.currentTime on the DOM
+setInterval(updateProgressValue, 500);
+
+// function where progressBar.value is changed when slider thumb is dragged without auto-playing audio
+function changeProgressBar() {
+    song.currentTime = progressBar.value;
+};
+
+</script>
